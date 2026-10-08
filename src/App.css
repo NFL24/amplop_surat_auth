@@ -1,0 +1,403 @@
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 260px 16px 48px;
+  background: radial-gradient(circle at 50% 30%, #3a7062 0%, #233f48 70%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.scene-welcome {
+  padding: 48px 16px;
+}
+ 
+/* Pembungkus amplop + tombol: turun ke bawah setelah surat terkirim */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  transition: transform 0.9s cubic-bezier(0.5, 0, 0.85, 0.4), opacity 0.9s ease;
+}
+ 
+.stage.leaving {
+  transform: translateY(110vh);
+  opacity: 0;
+}
+ 
+.caption {
+  margin: 0;
+  color: #9fb0cf;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+ 
+/* AMPLOP */
+.envelope {
+  position: relative;
+  width: 340px;
+  max-width: 100%;
+  height: 220px;
+  background: #d6b583;
+  border-radius: 6px;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.35);
+  perspective: 900px;
+}
+ 
+/* Kertas (berisi form) */
+.paper {
+  position: absolute;
+  top: 10px;
+  left: 18px;
+  right: 18px;
+  height: 190px;
+  background: #fffdf7;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 1;
+  /* animasi MENUTUP: kertas mengecil -> turun */
+  transition: height 0.4s ease 0s, transform 0.6s ease 0.45s, z-index 0s 0.4s;
+}
+ 
+.open .paper {
+  height: 410px;
+  transform: translateY(-220px);
+  z-index: 4;
+  /* animasi MEMBUKA: naik dulu -> baru memanjang */
+  transition: transform 0.6s ease 0.45s, height 0.5s ease 1.05s, z-index 0s 1.05s;
+}
+ 
+.paper-content {
+  height: 100%;
+  padding: 18px 20px;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease 0s, visibility 0s 0.2s;
+}
+ 
+.open .paper-content {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease 1.35s, visibility 0s 1.35s;
+}
+ 
+/* Bagian depan amplop (V) */
+.pocket {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #e6cca0, #dcbd8c);
+  clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 6px;
+  z-index: 2;
+}
+ 
+.stamp {
+  position: absolute;
+  top: 64px;
+  right: 16px;
+  width: 42px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  color: #b23a48;
+  font-size: 20px;
+  background: #fbf3e2;
+  border: 2px dashed #b23a48;
+  border-radius: 3px;
+  transform: rotate(4deg);
+}
+ 
+.address {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #7a5a30;
+  font-size: 12px;
+}
+ 
+.address-name {
+  font-family: 'Segoe Script', 'Bradley Hand', 'Brush Script MT', cursive;
+  font-size: 18px;
+  color: #5c4222;
+}
+ 
+/* Tutup amplop (flap) */
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  background: linear-gradient(180deg, #c9a574, #bd9760);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  z-index: 3;
+  /* animasi MENUTUP: menunggu kertas turun dulu */
+  transition: transform 0.5s ease 1.05s, z-index 0s 1.3s;
+}
+ 
+.open .flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+  /* animasi MEMBUKA: langsung terbuka */
+  transition: transform 0.5s ease 0s, z-index 0s 0.25s;
+}
+ 
+/* Segel lilin */
+.seal {
+  position: absolute;
+  top: 92px;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin-left: -18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d4566a, #8f2234);
+  color: #ffd9de;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+  transition: opacity 0.2s ease 1.3s;
+}
+ 
+.open .seal {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease 0s;
+}
+ 
+/* TOMBOL BUKA/TUTUP */
+.toggle-btn {
+  padding: 10px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffc857;
+  color: #3a2a07;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+ 
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  background: #ffd37a;
+}
+ 
+/* ISI KERTAS (FORM) */
+.paper-title {
+  margin: 0 0 12px;
+  font: 600 22px/1.2 Georgia, 'Times New Roman', serif;
+  color: #3b2f1c;
+}
+ 
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #e5dcc8;
+}
+ 
+.tab {
+  flex: 1;
+  padding: 7px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: #8a7a5c;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+ 
+.tab.active {
+  color: #228f8f;
+  border-bottom-color: #228f8f;
+  font-weight: 600;
+}
+ 
+.field {
+  margin-bottom: 11px;
+}
+ 
+.field label {
+  display: block;
+  margin-bottom: 2px;
+  color: #6b5a3c;
+  font-size: 12px;
+}
+ 
+.field input {
+  width: 100%;
+  padding: 6px 2px;
+  border: 0;
+  border-bottom: 1.5px solid #cfc3a6;
+  background: transparent;
+  color: #2f2514;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+ 
+.field input::placeholder {
+  color: #b5a888;
+}
+ 
+.field input:focus {
+  border-bottom-color: #8f2234;
+}
+ 
+.error {
+  margin: 0 0 8px;
+  color: #b3261e;
+  font-size: 12px;
+}
+ 
+.submit {
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  background: #228f8f;
+  color: #fff4f4;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+ 
+.submit:hover {
+  background: #a62a3f;
+  transform: translateY(-1px);
+}
+ 
+.toggle-btn:focus-visible,
+.submit:focus-visible,
+.tab:focus-visible,
+.field input:focus-visible {
+  outline: 2px solid #ffc857;
+  outline-offset: 2px;
+}
+ 
+/* Tampilan sukses */
+.success {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+ 
+.success h2 {
+  margin: 0;
+  font: 600 22px/1.2 Georgia, serif;
+  color: #3b2f1c;
+}
+ 
+.success p {
+  margin: 0 0 8px;
+  color: #6b5a3c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+ 
+.success-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #8f2234;
+  color: #fff;
+  font-size: 26px;
+}
+ 
+.toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+ 
+/* HALAMAN SELAMAT DATANG */
+.welcome {
+  width: 360px;
+  max-width: 100%;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  background: #fffdf7;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  animation: welcome-in 0.7s ease both;
+}
+ 
+.welcome h1 {
+  margin: 0;
+  font: 600 26px/1.25 Georgia, 'Times New Roman', serif;
+  color: #3b2f1c;
+}
+ 
+.welcome p {
+  margin: 0 0 8px;
+  color: #6b5a3c;
+  font-size: 15px;
+  line-height: 1.5;
+}
+ 
+.welcome-icon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #228f8f;
+  color: #fff; 
+  font-size: 28px;
+}
+
+.welcome-btn {
+  background: #228f8f;
+  max-width: 200px;
+}
+ 
+@keyframes welcome-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+ 
+/* AKSESIBILITAS */
+@media (prefers-reduced-motion: reduce) {
+  .paper,
+  .flap,
+  .seal,
+  .paper-content,
+  .stage {
+    transition: none !important;
+  }
+  .welcome {
+    animation: none;
+  }
+}
