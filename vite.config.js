@@ -4,5 +4,5 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/amplop_surat_auth/',
+  base: process.env.VERCEL ? '/' : '/amplop_surat_auth/',
 })
